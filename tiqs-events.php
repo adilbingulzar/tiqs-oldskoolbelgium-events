@@ -112,6 +112,12 @@ add_shortcode( 'tiqs-events', 'tiqs_events_info_short_code' );
 add_shortcode( 'tiqs-events-upcomming', 'tiqs_events_firstevent_short_code' );
 add_shortcode( 'tiqs-event-details', 'tiqs_event_detail_info_short_code' );
 
+add_filter( 'query_vars', 'add_custom_query_var' );
+function add_custom_query_var( $query_vars ) {
+    $query_vars[] = 'event';
+    return $query_vars;
+}
+
 function get_api_events() {
 	$extra_info = get_option('tiqs_events_info');     
 	$body = array('vendorId' => $extra_info);
@@ -122,21 +128,6 @@ function get_api_events() {
 
 	$response = wp_remote_post( 'https://tiqs.com/alfred/Api/ScannerApiV2/VendorEvents', $data );
 	$resp = wp_remote_retrieve_body( $response );
-	
-	// $ch = curl_init();
-
-	// curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-	// curl_setopt($ch, CURLOPT_URL, 'https://tiqs.com/alfred/Api/ScannerApiV2/VendorEvents');
-	// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	// curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-	// curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-	// curl_setopt($ch, CURLOPT_POST, true);
-	// curl_setopt($ch, CURLOPT_POSTFIELDS, $data); // the SOAP request
-	// // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-	// // converting
-	// $resp = curl_exec($ch); 
-	// // $httpcode = curl_getinfo($ch , CURLINFO_HTTP_CODE);
 
 	return json_decode($resp);
 }

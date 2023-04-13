@@ -24,8 +24,6 @@ function tiqs_events_update() {
     $EndTime        = isset($_POST["EndTime"])          ? sanitize_text_field($_POST["EndTime"])         : '';
     $url            = isset($_POST["url"])              ? sanitize_text_field($_POST["url"])            : '';
     $facebookUrl    = isset($_POST["facebookUrl"])      ? sanitize_text_field($_POST["facebookUrl"])     : '';
-    // $eventImage     = isset($_POST["eventImage"])       ? $_POST["eventImage"]      : '';
-
 
     //update
     if (isset($_POST['update'])) {

@@ -57,10 +57,6 @@ function tiqs_events_list() {
         $apiEventsUpdates = $wpdb->get_results($wpdb->prepare("SELECT event_id, vendorId,tag FROM $table_name WHERE type = 'api' AND tag != '' AND tag IS NOT NULL AND vendorId=%s", get_option('tiqs_events_info')));
 
         $apiRows = get_api_events();
-
-        // echo "<pre>";
-        // print_r($rows);
-        // exit;
         
         ?>
         <table class='wp-list-table widefat fixed striped posts'>

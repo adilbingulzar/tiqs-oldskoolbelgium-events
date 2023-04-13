@@ -100,35 +100,40 @@ if( !function_exists("tiqs_events_firstevent_short_code") ) {
 	} 
 }
 
-if( !function_exists("tiqs_event_detail_info_short_code") ) {   
-	function tiqs_event_detail_info_short_code($content) {   
-		if(isset($_GET['event']) && $_GET['event']) {
-			$exploded_url = explode("-" , get_query_var($_GET['event']));
-			if(isset($exploded_url[0]) && isset($exploded_url[1]) && ($exploded_url[0] == 'm' || $exploded_url[0] == 'a')) {
-				$eventDetail = TOED_GetSingleEvent($exploded_url[0] , $exploded_url[1]);
-				if($eventDetail) {
-					load_detail_css();
-					$eventDetailHtml = getEventDetailHtml();
-					$eventDetailHtml = str_replace("%IMAGE_LINK%",				$eventDetail->image,			$eventDetailHtml);
-					$eventDetailHtml = str_replace("%BOOK_NOW%",				$eventDetail->link,				$eventDetailHtml);
-					$eventDetailHtml = str_replace("%RSVP_LINK%",				$eventDetail->facebookUrl,		$eventDetailHtml);
-					$eventDetailHtml = str_replace("%EVENT_NAME%",				$eventDetail->title,			$eventDetailHtml);
-					$eventDetailHtml = str_replace("%START_DATE_NUMBER%",		$eventDetail->day,				$eventDetailHtml);
-					$eventDetailHtml = str_replace("%START_DATE_DAY%",			$eventDetail->startdayname,		$eventDetailHtml);
-					$eventDetailHtml = str_replace("%START_DATE_MONTH_NAME%",	$eventDetail->startmonthname,	$eventDetailHtml);
-					$eventDetailHtml = str_replace("%START_TIME%",				$eventDetail->starttime,		$eventDetailHtml);
-					$eventDetailHtml = str_replace("%END_TIME%",				$eventDetail->endtime,			$eventDetailHtml);
-					$eventDetailHtml = str_replace("%END_DATE%",				$eventDetail->enddate,			$eventDetailHtml);
-					$eventDetailHtml = str_replace("%DESCRIPT%",				$eventDetail->description,		$eventDetailHtml);
+if ( ! function_exists( 'tiqs_event_detail_info_short_code' ) ) {
+    function tiqs_event_detail_info_short_code( $atts ) {
+        ob_start();
+        
+        if ( isset( $_GET['event'] ) && $_GET['event'] ) {
+            $exploded_url = explode( '-', $_GET['event'] );
+            // Use $_GET['event'] directly in the above line as get_query_var() is not required here.
 
+            if ( isset( $exploded_url[0] ) && isset( $exploded_url[1] ) && ( $exploded_url[0] == 'm' || $exploded_url[0] == 'a' ) ) {
+                $eventDetail = TOED_GetSingleEvent( $exploded_url[0], $exploded_url[1] );
+				
+				
+                if ( $eventDetail ) {
+                    wp_enqueue_style( 'event-detail-css' ); // Enqueue the style sheet
+                    $eventDetailHtml = getEventDetailHtml(); // This function is not defined in the code provided, so you will need to define it
+                    $eventDetailHtml = str_replace( '%IMAGE_LINK%', $eventDetail->image, $eventDetailHtml );
+                    $eventDetailHtml = str_replace( '%BOOK_NOW%', $eventDetail->link, $eventDetailHtml );
+                    $eventDetailHtml = str_replace( '%RSVP_LINK%', $eventDetail->facebookUrl, $eventDetailHtml );
+                    $eventDetailHtml = str_replace( '%EVENT_NAME%', $eventDetail->title, $eventDetailHtml );
+                    $eventDetailHtml = str_replace( '%START_DATE_NUMBER%', $eventDetail->day, $eventDetailHtml );
+                    $eventDetailHtml = str_replace( '%START_DATE_DAY%', $eventDetail->startdayname, $eventDetailHtml );
+                    $eventDetailHtml = str_replace( '%START_DATE_MONTH_NAME%', $eventDetail->startmonthname, $eventDetailHtml );
+                    $eventDetailHtml = str_replace( '%START_TIME%', $eventDetail->starttime, $eventDetailHtml );
+                    $eventDetailHtml = str_replace( '%END_TIME%', $eventDetail->endtime, $eventDetailHtml );
+                    $eventDetailHtml = str_replace( '%END_DATE%', $eventDetail->enddate, $eventDetailHtml );
+                    $eventDetailHtml = str_replace( '%DESCRIPT%', $eventDetail->description, $eventDetailHtml );
 
-
-					
-					return $eventDetailHtml;
-				}
-			}
-		}
-	} 
+                    echo $eventDetailHtml;
+                }
+            }
+        }
+        return ob_get_clean();
+    }
+    add_shortcode( 'tiqs_event_detail_info', 'tiqs_event_detail_info_short_code' );
 }
 
 function TOED_GetAllEvents() {
@@ -309,20 +314,6 @@ function TOED_GetSingleEvent($type , $id) {
 		);
 		$response = wp_remote_post( 'https://tiqs.com/alfred/Api/ScannerApiV2/OneEvent', $data );
 		$resp     = wp_remote_retrieve_body( $response );
-		// $ch = curl_init();
-	
-		// curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-		// curl_setopt($ch, CURLOPT_URL, 'https://tiqs.com/alfred/Api/ScannerApiV2/OneEvent');
-		// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		// curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-		// curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-		// curl_setopt($ch, CURLOPT_POST, true);
-		// curl_setopt($ch, CURLOPT_POSTFIELDS, $data); // the SOAP request
-		// // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-	
-		// // converting
-		// $resp = curl_exec($ch); 
-		// // $httpcode = curl_getinfo($ch , CURLINFO_HTTP_CODE);
 	
 		$records = json_decode($resp);
 
@@ -358,7 +349,6 @@ function TOED_GetSingleEvent($type , $id) {
 
 			$tag = isset($isDataExist[array_key_first($isDataExist)]->tag) ? $isDataExist[array_key_first($isDataExist)]->tag : '';
 
-			// $link = 'http://tiqs.com/alfred/events/shop/' . $value->id;
 			$link = $value->redirectShopUrl && checkShopStatus($value->id) ? $value->redirectShopUrl : ('http://tiqs.com/alfred/events/shop/' . $value->id);
 
 			if($tag) {
@@ -446,12 +436,6 @@ function TOED_GetEventHtml() {
 			</div>
 		</div>
 	</div>';
-
-	// <font style="vertical-align: inherit;">
-	// 	<font style="vertical-align: inherit;">
-	// '%DESCRIPT%' + 
-	// 	</font>
-	// </font>
 }
 
 function getEventDetailHtml() {
@@ -659,19 +643,7 @@ function checkShopStatus($eventId) {
 	);
 	$response = wp_remote_post( 'https://tiqs.com/alfred/Api/Eventsnew/check_active_shop', $data );
 	$resp     = wp_remote_retrieve_body( $response );
-	// $ch = curl_init();
-	// curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-	// curl_setopt($ch, CURLOPT_URL, 'https://tiqs.com/alfred/Api/Eventsnew/check_active_shop');
-	// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	// curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-	// curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-	// curl_setopt($ch, CURLOPT_POST, true);
-	// curl_setopt($ch, CURLOPT_POSTFIELDS, $data); // the SOAP request
-	// // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-	// // converting
-	// $resp = curl_exec($ch); 
-	// // $httpcode = curl_getinfo($ch , CURLINFO_HTTP_CODE);
 	$records = json_decode($resp);
 
 	if(isset($records->status) && $records->status == 1) {
@@ -682,8 +654,6 @@ function checkShopStatus($eventId) {
 
 function getLessDescription($description) {
 	$description = trim($description);
-
-	// echo htmlspecialchars($description) . "<br>" . "<br>" . "<br>" . "<br>" . "<br>" . "<br>" . "<br>";
 
 	if($description && strlen($description) > 100) {
 		$dom = new \DOMDocument;
