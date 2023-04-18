@@ -18,6 +18,7 @@ if( !function_exists("tiqs_events_info_short_code") ) {
 						</div>';
 		$allEvents = "";
 		$calInnerHtml = "";
+
 		foreach ($eventsNodes as $key => $value) {
 			$detailPageLink = "#";
 			if($value->type == 'manual') {

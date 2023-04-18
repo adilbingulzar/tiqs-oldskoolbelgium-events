@@ -4,7 +4,7 @@
 Plugin name: Tiqs Oldskoolbelgium Events 
 Description: Display Tiqs Events 
 Author: Tiqs 
-Version: 1.1.3
+Version: 1.0.0
 */  
 
 function ss_options_install() {

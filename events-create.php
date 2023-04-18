@@ -1,6 +1,7 @@
 <?php
 
 function tiqs_events_create() {
+    add_action( 'admin_enqueue_scripts', 'tiqs_events_enqueue_styles' );
     $vendorId       = isset($_POST["vendorId"])         ? sanitize_text_field($_POST["vendorId"])        : '';
     $eventname      = isset($_POST["eventname"])        ? sanitize_text_field($_POST["eventname"])       : '';
     $eventdescript  = isset($_POST["eventdescript"])    ? sanitize_text_field($_POST["eventdescript"])   : '';
@@ -65,7 +66,7 @@ function tiqs_events_create() {
         $message ="Event insert successfully.";
     }
     ?>
-    <link type="text/css" href="<?php echo esc_url(WP_PLUGIN_URL . '/tiqs-events/style-admin.css') ?>" rel="stylesheet" />
+    <!-- <link type="text/css" href="<?php // echo esc_url(WP_PLUGIN_URL . '/tiqs-events/style-admin.css') ?>" rel="stylesheet" /> -->
     <div class="wrap">
         <h2>Add New Event</h2>
         <?php if (isset($message)): ?>
@@ -146,4 +147,8 @@ function tiqs_events_create() {
         </form>
     </div>
     <?php
+}
+
+function tiqs_events_enqueue_styles() {
+    wp_enqueue_style( 'tiqs-events-admin', plugins_url( 'style-admin.css', __FILE__ ) );
 }
