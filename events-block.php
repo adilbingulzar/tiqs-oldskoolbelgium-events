@@ -1,62 +1,68 @@
 <?php
 
-function tiqs_events_block() {
-    global $wpdb;
-    $table_name = $wpdb->prefix . "tiqs_events";
-    $id = sanitize_text_field($_GET["id"]);
-    $type = sanitize_text_field($_GET["type"]);
-    $isBlock = "";
-    if($type == 'manual') {
-        $events = $wpdb->get_results($wpdb->prepare("SELECT * from $table_name where id=%s AND type=%s", $id, $type));
+namespace Tiqs_OldSkoolBelgium_Events;
 
-        $isBlock = (isset($events[0]->is_blocked) && $events[0]->is_blocked) ? '0' : '1';
-        $wpdb->update(
-            $table_name, //table
-            array(
-                'is_blocked' => $isBlock,
-                'updatedAt'  => date("Y-m-d H:i:s"),
-
-            ), //data	
-            array('id' => $id), //where
-        );
-
-    } else if ('api') {
-        $vendorId = get_query_var($_GET["vendorId"]);
-        $events = $wpdb->get_results($wpdb->prepare("SELECT * from $table_name where event_id=%s AND vendorId=%s AND type=%s", $id, $vendorId, $type));
-
-        $isBlock = (isset($events[0]->is_blocked) && $events[0]->is_blocked) ? '0' : '1';
-
-        if(isset($events[0]->is_blocked)) {
-            $wpdb->update(
-                $table_name, //table
-                array(
-                    'is_blocked' => $isBlock,
-                    'updatedAt'  => date("Y-m-d H:i:s"),
-
-                ), //data	
-                array('event_id' => $id, 'vendorId' => $vendorId), //where
-            );
-        } else {
-            $wpdb->insert(
-                $table_name, //table
-                array(
-                    'event_id'      => $id, 
-                    'vendorId'      => $vendorId,
-                    'type'          => 'api',
-                    'is_blocked'    => '1',
-                    'createdAt'     => date("Y-m-d H:i:s"),
-                    'updatedAt'     => date("Y-m-d H:i:s"),
-
-                ), //data		
-            );
-        }
+class EventsBlock {
+    public function __construct() {
+        // Constructor logic
     }
 
-    ?>
+    public function tiqs_events_block() {
+        global $wpdb;
+        $table_name = $wpdb->prefix . "tiqs_events";
+        $id = esc_attr( $_GET["id"] );
+        $type = esc_attr( $_GET["type"] );
+        $is_blocked = "";
 
-    <div class="updated"><p>Event <?php echo $isBlock == '1' ? 'Blocked' : 'Un-Blocked' ?></p></div>
-    <a href="<?php echo admin_url('admin.php?page=tiqs_events_list') ?>">&laquo; Back to events list</a>
+        if ( $type === 'manual' ) {
+            $events = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %s AND type = %s", $id, $type ) );
 
+            $is_blocked = ( isset( $events[0]->is_blocked ) && $events[0]->is_blocked ) ? '0' : '1';
+            $wpdb->update(
+                $table_name,
+                array(
+                    'is_blocked' => $is_blocked,
+                    'updatedAt'  => current_time( 'mysql' ),
+                ),
+                array( 'id' => $id )
+            );
 
-    <?php
+        } elseif ( $type === 'api' ) {
+            $vendorId = esc_attr( get_query_var( $_GET["vendorId"] ) );
+            $events = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $table_name WHERE event_id = %s AND vendorId = %s AND type = %s", $id, $vendorId, $type ) );
+
+            $is_blocked = ( isset( $events[0]->is_blocked ) && $events[0]->is_blocked ) ? '0' : '1';
+
+            if ( isset( $events[0]->is_blocked ) ) {
+                $wpdb->update(
+                    $table_name,
+                    array(
+                        'is_blocked' => $is_blocked,
+                        'updatedAt'  => current_time( 'mysql' ),
+                    ),
+                    array( 'event_id' => $id, 'vendorId' => $vendorId )
+                );
+            } else {
+                $wpdb->insert(
+                    $table_name,
+                    array(
+                        'event_id'   => $id,
+                        'vendorId'   => $vendorId,
+                        'type'       => 'api',
+                        'is_blocked' => '1',
+                        'createdAt'  => current_time( 'mysql' ),
+                        'updatedAt'  => current_time( 'mysql' ),
+                    )
+                );
+            }
+        }
+        ?>
+
+        <div class="updated">
+            <p>Event <?php echo $is_blocked === '1' ? 'Blocked' : 'Un-Blocked'; ?></p>
+        </div>
+        <a href="<?php echo esc_url( admin_url( 'admin.php?page=tiqs_events_list' ) ); ?>">&laquo; Back to events list</a>
+
+        <?php
+    }
 }
