@@ -4,7 +4,7 @@ namespace Tiqs_OldSkoolBelgium_Events;
 
 class EventsFrontSide {
   
-	function tiqs_events_info_short_code($content) {
+	function tiqs_events_info_short_code() {
 		$eventsNodes = $this->TOED_GetAllEvents();
 		$calenderHtml = '<div class="dates-boxes" data-slug="%DATESLUG%">
 							<div class="date fw-bold font-vanguard lh-1">
@@ -66,7 +66,7 @@ class EventsFrontSide {
 		return $calenderHtml . $allEvents;
 	} 
 	 
-	function tiqs_events_firstevent_short_code($content) {    
+	function tiqs_events_firstevent_short_code() {    
 		$eventsNodes = $this->TOED_GetAllEvents();
 		$value = isset($eventsNodes[0]) ? $eventsNodes[0] : NULL;
 		if($value) {
@@ -101,7 +101,7 @@ class EventsFrontSide {
 		return $eventHtml;
 	} 
 
-	function tiqs_event_detail_info_short_code( $atts ) {
+	function tiqs_event_detail_info_short_code() {
 		ob_start();
 		
 		if ( isset( $_GET['event'] ) && $_GET['event'] ) {
@@ -153,11 +153,12 @@ class EventsFrontSide {
 			$apiEventsUpdates = $wpdb->get_results($wpdb->prepare("SELECT event_id, vendorId,tag FROM $table_name WHERE type = 'api' AND tag != '' AND tag IS NOT NULL AND vendorId=%s", get_option('tiqs_events_info')));
 		}
 
-		$events = get_api_events();
+		$events_plugin = new \Tiqs_OldSkoolBelgium_Events\EventsPlugin();
+        $events = $events_plugin->get_api_events();
 
 		$allEvents = array();
 		foreach ($rows as $rKey => $rValue) {
-			$obj = new stdClass();
+			$obj = new \stdClass();
 			$obj->color = "3";
 			$obj->title = $rValue->eventname;
 			$obj->description = $rValue->eventdescript;
@@ -199,7 +200,7 @@ class EventsFrontSide {
 
 		foreach ($events as $key => $value) {
 			if(!in_array($value->id, $blockedApiEvents)) {
-				$obj = new stdClass();
+				$obj = new \stdClass();
 				$obj->color = "3";
 				$obj->title = $value->eventname;
 				$obj->description = $value->eventdescript;
@@ -260,11 +261,11 @@ class EventsFrontSide {
 	}
 
 	function TOED_GetSingleEvent($type , $id) {
-		$obj = new stdClass();
+		$obj = new \stdClass();
 		global $wpdb;
 		$table_name = $wpdb->prefix . "tiqs_events";
 		if($type == 'm') {
-			$records = $wpdb->get_results($wpdb->prepare("SELECT * from $table_name where id=%s AND type = 'manual' AND is_blocked = '0' AND vendorId=%s", get_option('tiqs_events_info') , $id));
+			$records = $wpdb->get_results($wpdb->prepare("SELECT * from $table_name where id=%s AND $type = 'manual' AND is_blocked = '0' AND vendorId=%s", get_option('tiqs_events_info') , $id));
 
 			if(isset($records[0])) {
 				$rValue = $records[0];
@@ -545,7 +546,7 @@ class EventsFrontSide {
 		wp_enqueue_style( 'tiqs-events-1' );
 	}
 
-	function tiqs_events_header() {
+	public static function tiqs_events_header() {
 		global $post;
 		
 		if(has_shortcode($post->post_content, 'tiqs-events')) { ?>
@@ -606,7 +607,7 @@ class EventsFrontSide {
 		
 	}
 
-	function tiqs_events_footer_js() {
+	public static function tiqs_events_footer_js() {
 		global $post;
 		
 		if(has_shortcode($post->post_content, 'tiqs-events') || has_shortcode($post->post_content, 'tiqs-events-upcomming')) { ?>

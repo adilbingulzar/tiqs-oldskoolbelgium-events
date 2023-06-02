@@ -36,12 +36,15 @@ class EventsPlugin {
         // Register AJAX action
         add_action('wp_ajax_update_status_db', array('\Tiqs_OldSkoolBelgium_Events\UpdateEventTags', 'TOED_Update_status_db_callback'));
 
+        if (!defined('TOED_EVENTROOTDIR')) {
+            define('TOED_EVENTROOTDIR', plugin_dir_path(__FILE__));
+        }
+
         // Include necessary files
         $this->include_files();
     }
 
     public function include_files() {
-        define('TOED_EVENTROOTDIR', plugin_dir_path(__FILE__));
         require_once(TOED_EVENTROOTDIR . 'events-list.php');
         require_once(TOED_EVENTROOTDIR . 'events-create.php');
         require_once(TOED_EVENTROOTDIR . 'events-update.php');
@@ -170,6 +173,28 @@ class EventsPlugin {
     public function add_custom_query_var($query_vars) {
         $query_vars[] = 'event';
         return $query_vars;
+    }
+
+    function get_api_events() {
+        $extra_info = get_option('tiqs_events_info');     
+        $data = array('vendorId' => $extra_info);
+    
+        $ch = curl_init();
+    
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+        curl_setopt($ch, CURLOPT_URL, 'https://tiqs.com/alfred/Api/ScannerApiV2/VendorEvents');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data); // the SOAP request
+        // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    
+        // converting
+        $resp = curl_exec($ch); 
+        // $httpcode = curl_getinfo($ch , CURLINFO_HTTP_CODE);
+    
+        return json_decode($resp);
     }
 }
 
