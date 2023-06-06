@@ -176,26 +176,31 @@ class EventsPlugin {
     }
 
     function get_api_events() {
-        $extra_info = get_option('tiqs_events_info');     
+        $extra_info = get_option('tiqs_events_info');
         $data = array('vendorId' => $extra_info);
     
-        $ch = curl_init();
+        $url = 'https://tiqs.com/alfred/Api/ScannerApiV2/VendorEvents';
+        $args = array(
+            'sslverify' => true,
+            'timeout'   => 10,
+            'headers'   => array(
+                'Content-Type' => 'application/json'
+            ),
+            'body'      => $data,
+        );
     
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-        curl_setopt($ch, CURLOPT_URL, 'https://tiqs.com/alfred/Api/ScannerApiV2/VendorEvents');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data); // the SOAP request
-        // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        $response = wp_remote_post($url, $args);
     
-        // converting
-        $resp = curl_exec($ch); 
-        // $httpcode = curl_getinfo($ch , CURLINFO_HTTP_CODE);
+        if (is_wp_error($response)) {
+            return null;
+        }
     
-        return json_decode($resp);
+        $body = wp_remote_retrieve_body($response);
+        $decoded_response = json_decode($body);
+    
+        return $decoded_response;
     }
+    
 }
 
 // Instantiate the plugin

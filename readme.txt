@@ -2,14 +2,12 @@
 Contributors: adilgulzar
 Donate link: https://tiqs.com/
 Tags: oldskool, belgium, Oldskoolbelgium, Events
-Requires at least: 1.0.0
-Tested up to: 1.0.0
+Requires at least: 5.0
+Tested up to: 5.8
 Stable tag: 1.0.0
 Requires PHP: 7.4
 License: GPLv2 or later
 This Plugin is for Oldskoolbelgium Events.
-
-Here is a short description of the plugin: This plugin is for managing and displaying upcoming events organized by Oldskoolbelgium.
 
 == Description ==
 
@@ -20,6 +18,7 @@ Shortcodes provided by this plugin:
 [tiqs-events]: Displays a list of all events.
 [tiqs-events-upcoming]: Displays a list of upcoming events.
 [tiqs-event-details]: Displays detailed information about a specific event.
+
 == Frequently Asked Questions ==
 
 = How do I purchase tickets for an event? =
@@ -45,19 +44,15 @@ Please contact the event organizer directly to inquire about sponsor or vendor o
 
 == Screenshots ==
 
-Screenshot of Events - Oldskoolbelgium.jpg
+1. This screen shot description corresponds to Oldskoolbelgium.(png|jpg|jpeg|gif).
+
 == Changelog ==
 
 = 1.0.0 =
 
 First release.
+
 == Upgrade Notice ==
 
 = 1.0.0 =
 This is the first release of the Oldskoolbelgium Events plugin.
-
-
-
-
-
-

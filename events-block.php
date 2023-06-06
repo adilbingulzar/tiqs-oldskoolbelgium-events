@@ -10,12 +10,12 @@ class EventsBlock {
     public function tiqs_events_block() {
         global $wpdb;
         $table_name = $wpdb->prefix . "tiqs_events";
-        $id = esc_attr( $_GET["id"] );
-        $type = esc_attr( $_GET["type"] );
+        $id = isset( $_GET["id"] ) ? absint( $_GET["id"] ) : 0;
+        $type = isset( $_GET["type"] ) ? sanitize_text_field( $_GET["type"] ) : '';
         $is_blocked = "";
 
         if ( $type === 'manual' ) {
-            $events = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %s AND type = %s", $id, $type ) );
+            $events = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %d AND type = %s", $id, $type ) );
 
             $is_blocked = ( isset( $events[0]->is_blocked ) && $events[0]->is_blocked ) ? '0' : '1';
             $wpdb->update(
@@ -28,8 +28,8 @@ class EventsBlock {
             );
 
         } elseif ( $type === 'api' ) {
-            $vendorId = esc_attr( get_query_var( $_GET["vendorId"] ) );
-            $events = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $table_name WHERE event_id = %s AND vendorId = %s AND type = %s", $id, $vendorId, $type ) );
+            $vendorId = isset( $_GET["vendorId"] ) ? absint( $_GET["vendorId"] ) : 0;
+            $events = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $table_name WHERE event_id = %d AND vendorId = %d AND type = %s", $id, $vendorId, $type ) );
 
             $is_blocked = ( isset( $events[0]->is_blocked ) && $events[0]->is_blocked ) ? '0' : '1';
 
@@ -59,7 +59,7 @@ class EventsBlock {
         ?>
 
         <div class="updated">
-            <p>Event <?php echo $is_blocked === '1' ? 'Blocked' : 'Un-Blocked'; ?></p>
+            <p>Event <?php echo esc_html( $is_blocked === '1' ? 'Blocked' : 'Un-Blocked' ); ?></p>
         </div>
         <a href="<?php echo esc_url( admin_url( 'admin.php?page=tiqs_events_list' ) ); ?>">&laquo; Back to events list</a>
 

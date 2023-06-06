@@ -21,117 +21,119 @@ class EventsFrontSide {
 						</div>';
 		$allEvents = "";
 		$calInnerHtml = "";
-
+	
 		foreach ($eventsNodes as $key => $value) {
 			$detailPageLink = "#";
 			if($value->type == 'manual') {
-				$detailPageLink = site_url('event-detail?event=m-' . $value->id);
+				$detailPageLink = esc_url( site_url('event-detail?event=m-' . $value->id) );
 			} else {
-				$detailPageLink = site_url('event-detail?event=a-' . $value->event_id);
+				$detailPageLink = esc_url( site_url('event-detail?event=a-' . $value->event_id) );
 			}
-
+	
 			$lessDescription = $this->getLessDescription($value->description);
-
+	
 			$eventHtml = $this->TOED_GetEventHtml();
-			$eventHtml = str_replace("%IMAGE_LINK%",			$value->image,				$eventHtml);
-			$eventHtml = str_replace("%BOOK_NOW%",				$value->link,				$eventHtml);
-			$eventHtml = str_replace("%RSVP_LINK%",				$value->facebookUrl,			$eventHtml);
-			$eventHtml = str_replace("%EVENT_NAME%",			$value->title,				$eventHtml);
-			$eventHtml = str_replace("%START_DATE_NUMBER%",		$value->day,				$eventHtml);
-			$eventHtml = str_replace("%START_DATE_DAY%",		$value->startdayname,		$eventHtml);
-			$eventHtml = str_replace("%START_DATE_MONTH_NAME%",	$value->startmonthname,		$eventHtml);
-			$eventHtml = str_replace("%START_TIME%",			$value->starttime,			$eventHtml);
-			$eventHtml = str_replace("%END_TIME%",				$value->endtime,			$eventHtml);
-			$eventHtml = str_replace("%END_DATE%",				$value->enddate,			$eventHtml);
-			$eventHtml = str_replace("%LESS_DESCRIPT%",			$lessDescription,		$eventHtml);
+			$eventHtml = str_replace("%IMAGE_LINK%",			esc_url( $value->image ),				$eventHtml);
+			$eventHtml = str_replace("%BOOK_NOW%",				esc_url( $value->link ),				$eventHtml);
+			$eventHtml = str_replace("%RSVP_LINK%",				esc_url( $value->facebookUrl ),				$eventHtml);
+			$eventHtml = str_replace("%EVENT_NAME%",			esc_html( $value->title ),				$eventHtml);
+			$eventHtml = str_replace("%START_DATE_NUMBER%",		esc_html( $value->day ),				$eventHtml);
+			$eventHtml = str_replace("%START_DATE_DAY%",		esc_html( $value->startdayname ),		$eventHtml);
+			$eventHtml = str_replace("%START_DATE_MONTH_NAME%",	esc_html( $value->startmonthname ),		$eventHtml);
+			$eventHtml = str_replace("%START_TIME%",			esc_html( $value->starttime ),			$eventHtml);
+			$eventHtml = str_replace("%END_TIME%",				esc_html( $value->endtime ),			$eventHtml);
+			$eventHtml = str_replace("%END_DATE%",				esc_html( $value->enddate ),			$eventHtml);
+			$eventHtml = str_replace("%LESS_DESCRIPT%",			esc_html( $lessDescription ),		$eventHtml);
 			$eventHtml = str_replace("%READ_MORE_LINK%",		$lessDescription ? '<a href="javascript:void(0);" class="read_more_link">Read More</a>' : NULL,		$eventHtml);
 			$eventHtml = str_replace("%DISPLAY_LESS_DESCRIPT%",	$lessDescription ? 'block' : 'none',		$eventHtml);
 			$eventHtml = str_replace("%DISPLAY_MORE_DESCRIPT%",	(!$lessDescription && $value->description) ? 'block' : 'none',		$eventHtml);
-			$eventHtml = str_replace("%MORE_DESCRIPT%",			$value->description,		$eventHtml);
+			$eventHtml = str_replace("%MORE_DESCRIPT%",			esc_html( $value->description ),		$eventHtml);
 			$eventHtml = str_replace("%DETAIL_LINK%",			$detailPageLink,			$eventHtml);
-			$eventHtml = str_replace("%DATESLUG%", $value->day.$value->startdayname.$value->startmonthname,	$eventHtml);
+			$eventHtml = str_replace("%DATESLUG%", esc_html( $value->day . $value->startdayname . $value->startmonthname ),	$eventHtml);
 			$allEvents .= $eventHtml;
-
+	
 			$calHtml = $calenderHtml;
-			
-			$calHtml = str_replace("%START_DATE_NUMBER%",	$value->day,	$calHtml);
-			$calHtml = str_replace("%START_DATE_DAY%",		$value->startdayname,	$calHtml);
-			$calHtml = str_replace("%START_DATE_MONTH_NAME%", $value->startmonthname,	$calHtml);
-			$calHtml = str_replace("%DATESLUG%", $value->day.$value->startdayname.$value->startmonthname,	$calHtml);
+			$calHtml = str_replace("%START_DATE_NUMBER%",	esc_html( $value->day ),	$calHtml);
+			$calHtml = str_replace("%START_DATE_DAY%",		esc_html( $value->startdayname ),	$calHtml);
+			$calHtml = str_replace("%START_DATE_MONTH_NAME%", esc_html( $value->startmonthname ),	$calHtml);
+			$calHtml = str_replace("%DATESLUG%", esc_html( $value->day . $value->startdayname . $value->startmonthname ),	$calHtml);
 			$calInnerHtml .= $calHtml;
 		}
-
+	
 		$calenderHtml = '<div class="dates-boxes-wrapper">' . $calInnerHtml . '</div>';
-
-		return $calenderHtml . $allEvents;
-	} 
+	
+		return esc_html($calenderHtml . $allEvents);
+	}
 	 
-	function tiqs_events_firstevent_short_code() {    
+	function tiqs_events_firstevent_short_code() {
 		$eventsNodes = $this->TOED_GetAllEvents();
 		$value = isset($eventsNodes[0]) ? $eventsNodes[0] : NULL;
-		if($value) {
+		$eventHtml = '';
+	
+		if ($value) {
 			$detailPageLink = "#";
-			if($value->type == 'manual') {
-				$detailPageLink = site_url('event-detail?event=m-' . $value->id);
+			if ($value->type == 'manual') {
+				$detailPageLink = esc_url( site_url('event-detail?event=m-' . $value->id) );
 			} else {
-				$detailPageLink = site_url('event-detail?event=a-' . $value->event_id);
+				$detailPageLink = esc_url( site_url('event-detail?event=a-' . $value->event_id) );
 			}
-
+	
 			$lessDescription = $this->getLessDescription($value->description);
-
+	
 			$eventHtml = $this->TOED_GetEventHtml();
-			$eventHtml = str_replace("%IMAGE_LINK%",			$value->image,				$eventHtml);
-			$eventHtml = str_replace("%BOOK_NOW%",				$value->link,				$eventHtml);
-			$eventHtml = str_replace("%RSVP_LINK%",				$value->facebookUrl,			$eventHtml);
-			$eventHtml = str_replace("%EVENT_NAME%",			$value->title,				$eventHtml);
-			$eventHtml = str_replace("%START_DATE_NUMBER%",		$value->day,				$eventHtml);
-			$eventHtml = str_replace("%START_DATE_DAY%",		$value->startdayname,		$eventHtml);
-			$eventHtml = str_replace("%START_DATE_MONTH_NAME%",	$value->startmonthname,		$eventHtml);
-			$eventHtml = str_replace("%START_TIME%",			$value->starttime,			$eventHtml);
-			$eventHtml = str_replace("%END_TIME%",				$value->endtime,			$eventHtml);
-			$eventHtml = str_replace("%END_DATE%",				$value->enddate,			$eventHtml);
-			$eventHtml = str_replace("%LESS_DESCRIPT%",			$lessDescription,		$eventHtml);
+			$eventHtml = str_replace("%IMAGE_LINK%",			esc_url( $value->image ),				$eventHtml);
+			$eventHtml = str_replace("%BOOK_NOW%",				esc_url( $value->link ),				$eventHtml);
+			$eventHtml = str_replace("%RSVP_LINK%",				esc_url( $value->facebookUrl ),				$eventHtml);
+			$eventHtml = str_replace("%EVENT_NAME%",			esc_html( $value->title ),				$eventHtml);
+			$eventHtml = str_replace("%START_DATE_NUMBER%",		esc_html( $value->day ),				$eventHtml);
+			$eventHtml = str_replace("%START_DATE_DAY%",		esc_html( $value->startdayname ),		$eventHtml);
+			$eventHtml = str_replace("%START_DATE_MONTH_NAME%",	esc_html( $value->startmonthname ),		$eventHtml);
+			$eventHtml = str_replace("%START_TIME%",			esc_html( $value->starttime ),			$eventHtml);
+			$eventHtml = str_replace("%END_TIME%",				esc_html( $value->endtime ),			$eventHtml);
+			$eventHtml = str_replace("%END_DATE%",				esc_html( $value->enddate ),			$eventHtml);
+			$eventHtml = str_replace("%LESS_DESCRIPT%",			esc_html( $lessDescription ),		$eventHtml);
 			$eventHtml = str_replace("%READ_MORE_LINK%",		$lessDescription ? '<a href="javascript:void(0);" class="read_more_link">Read More</a>' : NULL,		$eventHtml);
 			$eventHtml = str_replace("%DISPLAY_LESS_DESCRIPT%",	$lessDescription ? 'block' : 'none',		$eventHtml);
 			$eventHtml = str_replace("%DISPLAY_MORE_DESCRIPT%",	(!$lessDescription && $value->description) ? 'block' : 'none',		$eventHtml);
-			$eventHtml = str_replace("%MORE_DESCRIPT%",			$value->description,		$eventHtml);
+			$eventHtml = str_replace("%MORE_DESCRIPT%",			esc_html( $value->description ),		$eventHtml);
 			$eventHtml = str_replace("%DETAIL_LINK%",			$detailPageLink,			$eventHtml);
 		}
-
-		return $eventHtml;
-	} 
+	
+		return esc_html($eventHtml);
+	}
+	
 
 	function tiqs_event_detail_info_short_code() {
 		ob_start();
-		
+	
 		if ( isset( $_GET['event'] ) && $_GET['event'] ) {
-			$exploded_url = explode( '-', $_GET['event'] );
-			// Use $_GET['event'] directly in the above line as get_query_var() is not required here.
-
+			$exploded_url = explode( '-', sanitize_text_field( wp_unslash( $_GET['event'] ) ) );
+		
 			if ( isset( $exploded_url[0] ) && isset( $exploded_url[1] ) && ( $exploded_url[0] == 'm' || $exploded_url[0] == 'a' ) ) {
 				$eventDetail = $this->TOED_GetSingleEvent( $exploded_url[0], $exploded_url[1] );
-				
-				
+		
 				if ( $eventDetail ) {
 					wp_enqueue_style( 'event-detail-css' ); // Enqueue the style sheet
 					$eventDetailHtml = $this->getEventDetailHtml(); // This function is not defined in the code provided, so you will need to define it
-					$eventDetailHtml = str_replace( '%IMAGE_LINK%', $eventDetail->image, $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%BOOK_NOW%', $eventDetail->link, $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%RSVP_LINK%', $eventDetail->facebookUrl, $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%EVENT_NAME%', $eventDetail->title, $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%START_DATE_NUMBER%', $eventDetail->day, $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%START_DATE_DAY%', $eventDetail->startdayname, $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%START_DATE_MONTH_NAME%', $eventDetail->startmonthname, $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%START_TIME%', $eventDetail->starttime, $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%END_TIME%', $eventDetail->endtime, $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%END_DATE%', $eventDetail->enddate, $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%DESCRIPT%', $eventDetail->description, $eventDetailHtml );
-
-					echo $eventDetailHtml;
+					
+					$eventDetailHtml = str_replace( '%IMAGE_LINK%', esc_url( $eventDetail->image ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%BOOK_NOW%', esc_url( $eventDetail->link ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%RSVP_LINK%', esc_url( $eventDetail->facebookUrl ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%EVENT_NAME%', esc_html( $eventDetail->title ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%START_DATE_NUMBER%', esc_html( $eventDetail->day ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%START_DATE_DAY%', esc_html( $eventDetail->startdayname ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%START_DATE_MONTH_NAME%', esc_html( $eventDetail->startmonthname ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%START_TIME%', esc_html( $eventDetail->starttime ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%END_TIME%', esc_html( $eventDetail->endtime ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%END_DATE%', esc_html( $eventDetail->enddate ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%DESCRIPT%', esc_html( $eventDetail->description ), $eventDetailHtml );
+		
+					echo esc_html( $eventDetailHtml );
 				}
 			}
 		}
 		return ob_get_clean();
+		
 	}
 
 	function TOED_GetAllEvents() {
