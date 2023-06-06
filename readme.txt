@@ -9,7 +9,7 @@ Requires PHP: 7.4
 License: GPLv2 or later
 This Plugin is for Oldskoolbelgium Events.
 
-Here is a short description of the plugin: This plugin is for managing and displaying upcoming events organized by Oldskoolbelgium.
+This plugin is for managing and displaying upcoming events organized by Oldskoolbelgium.
 
 == Description ==
 
@@ -45,9 +45,9 @@ Please contact the event organizer directly to inquire about sponsor or vendor o
 
 == Screenshots ==
 
-Screenshot of Events - Oldskoolbelgium.jpg
-== Changelog ==
+1. This screen shot description corresponds to Oldskoolbelgium.(png|jpg|jpeg|gif).
 
+== Changelog ==
 = 1.0.0 =
 
 First release.
@@ -55,9 +55,3 @@ First release.
 
 = 1.0.0 =
 This is the first release of the Oldskoolbelgium Events plugin.
-
-
-
-
-
-

@@ -103,30 +103,30 @@ class EventsFrontSide {
 
 	function tiqs_event_detail_info_short_code() {
 		ob_start();
-		
+	
 		if ( isset( $_GET['event'] ) && $_GET['event'] ) {
-			$exploded_url = explode( '-', $_GET['event'] );
+			$exploded_url = explode( '-', sanitize_text_field( wp_unslash( $_GET['event'] ) ) );
 			// Use $_GET['event'] directly in the above line as get_query_var() is not required here.
-
+	
 			if ( isset( $exploded_url[0] ) && isset( $exploded_url[1] ) && ( $exploded_url[0] == 'm' || $exploded_url[0] == 'a' ) ) {
 				$eventDetail = $this->TOED_GetSingleEvent( $exploded_url[0], $exploded_url[1] );
-				
-				
+	
 				if ( $eventDetail ) {
 					wp_enqueue_style( 'event-detail-css' ); // Enqueue the style sheet
 					$eventDetailHtml = $this->getEventDetailHtml(); // This function is not defined in the code provided, so you will need to define it
-					$eventDetailHtml = str_replace( '%IMAGE_LINK%', $eventDetail->image, $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%BOOK_NOW%', $eventDetail->link, $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%RSVP_LINK%', $eventDetail->facebookUrl, $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%EVENT_NAME%', $eventDetail->title, $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%START_DATE_NUMBER%', $eventDetail->day, $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%START_DATE_DAY%', $eventDetail->startdayname, $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%START_DATE_MONTH_NAME%', $eventDetail->startmonthname, $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%START_TIME%', $eventDetail->starttime, $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%END_TIME%', $eventDetail->endtime, $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%END_DATE%', $eventDetail->enddate, $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%DESCRIPT%', $eventDetail->description, $eventDetailHtml );
-
+					
+					$eventDetailHtml = str_replace( '%IMAGE_LINK%', esc_url( $eventDetail->image ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%BOOK_NOW%', esc_url( $eventDetail->link ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%RSVP_LINK%', esc_url( $eventDetail->facebookUrl ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%EVENT_NAME%', esc_html( $eventDetail->title ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%START_DATE_NUMBER%', esc_html( $eventDetail->day ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%START_DATE_DAY%', esc_html( $eventDetail->startdayname ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%START_DATE_MONTH_NAME%', esc_html( $eventDetail->startmonthname ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%START_TIME%', esc_html( $eventDetail->starttime ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%END_TIME%', esc_html( $eventDetail->endtime ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%END_DATE%', esc_html( $eventDetail->enddate ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%DESCRIPT%', esc_html( $eventDetail->description ), $eventDetailHtml );
+	
 					echo $eventDetailHtml;
 				}
 			}

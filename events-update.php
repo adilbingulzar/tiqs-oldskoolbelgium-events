@@ -5,6 +5,11 @@ namespace Tiqs_OldSkoolBelgium_Events;
 class EventsUpdate {
     public function __construct() {
         // Constructor logic
+        add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
+    }
+
+    public function enqueue_admin_scripts() {
+        wp_enqueue_style('tiqs-events-admin-style', plugin_dir_url(__FILE__) . 'style-admin.css');
     }
 
     public function tiqs_events_update() {
@@ -98,7 +103,6 @@ class EventsUpdate {
             }
         }
         ?>
-        <link type="text/css" href="<?php echo esc_url( WP_PLUGIN_URL . '/tiqs-events/style-admin.css' ) ?>" rel="stylesheet" />
         <div class="wrap">
             <h2>Update Event</h2>
 
