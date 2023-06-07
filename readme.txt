@@ -47,7 +47,6 @@ Please contact the event organizer directly to inquire about sponsor or vendor o
 1. This screen shot description corresponds to Oldskoolbelgium.(png|jpg|jpeg|gif).
 
 == Changelog ==
-
 = 1.0.0 =
 
 First release.
@@ -55,4 +54,6 @@ First release.
 == Upgrade Notice ==
 
 = 1.0.0 =
+
 This is the first release of the Oldskoolbelgium Events plugin.
+
