@@ -3,7 +3,7 @@ Contributors: adilgulzar
 Donate link: https://tiqs.com/
 Tags: oldskool, belgium, Oldskoolbelgium, Events
 Requires at least: 5.0
-Tested up to: 5.8
+Tested up to: 6.2
 Stable tag: 1.0.0
 Requires PHP: 7.4
 License: GPLv2 or later
