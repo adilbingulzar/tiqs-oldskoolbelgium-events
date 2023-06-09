@@ -4,3 +4,6 @@
 .eventdatetime{display:flex;flex-direction:row;align-items:flex-start;font-family:"vanguard";}.startdateblock{display:flex;flex-direction:row;}.numberOfDay{font-size:3.5rem;margin:0 10px 0 0;padding:0;line-height:1;font-weight:700;}.nameOfDay,.nameOfMonth{font-size:1.1rem;}.extradateinfoblock{margin:0 0 0 20px;font-size:1.1rem;}
 
 .eventbuttonsblock{display:flex;flex-direction:row;justify-content:space-between;}a.eventbtn{border:2px solid #fff;padding: 8px 20px;margin-right:20px;color:#fff;font-size:1.1rem;font-weight:500;font-family:"vanguard","Roboto Condensed",sans-serif;border-radius:3px;letter-spacing:1px;transition:all .35s ease-in-out;}a.eventbtn:hover, a.eventbtn:focus{background:#92D25B;border-color:#92D25B;}a.eventbtn.large{font-size:1.25rem;border-width:3px;padding:10px 25px;}
+.pointer {
+    cursor: pointer;
+}

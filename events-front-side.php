@@ -39,27 +39,27 @@ class EventsFrontSide {
 			$eventHtml = str_replace("%IMAGE_LINK%",			esc_url( $value->image ),				$eventHtml);
 			$eventHtml = str_replace("%BOOK_NOW%",				esc_url( $value->link ),				$eventHtml);
 			$eventHtml = str_replace("%RSVP_LINK%",				esc_url( $value->facebookUrl ),				$eventHtml);
-			$eventHtml = str_replace("%EVENT_NAME%",			esc_html( $value->title ),				$eventHtml);
-			$eventHtml = str_replace("%START_DATE_NUMBER%",		esc_html( $value->day ),				$eventHtml);
-			$eventHtml = str_replace("%START_DATE_DAY%",		esc_html( $value->startdayname ),		$eventHtml);
-			$eventHtml = str_replace("%START_DATE_MONTH_NAME%",	esc_html( $value->startmonthname ),		$eventHtml);
-			$eventHtml = str_replace("%START_TIME%",			esc_html( $value->starttime ),			$eventHtml);
-			$eventHtml = str_replace("%END_TIME%",				esc_html( $value->endtime ),			$eventHtml);
-			$eventHtml = str_replace("%END_DATE%",				esc_html( $value->enddate ),			$eventHtml);
-			$eventHtml = str_replace("%LESS_DESCRIPT%",			esc_html( $lessDescription ),		$eventHtml);
-			$eventHtml = str_replace("%READ_MORE_LINK%",		$lessDescription ? '<a href="javascript:void(0);" class="read_more_link">Read More</a>' : NULL,		$eventHtml);
+			$eventHtml = str_replace("%EVENT_NAME%",			wp_kses_post( $value->title ),				$eventHtml);
+			$eventHtml = str_replace("%START_DATE_NUMBER%",		wp_kses_post( $value->day ),				$eventHtml);
+			$eventHtml = str_replace("%START_DATE_DAY%",		wp_kses_post( $value->startdayname ),		$eventHtml);
+			$eventHtml = str_replace("%START_DATE_MONTH_NAME%",	wp_kses_post( $value->startmonthname ),		$eventHtml);
+			$eventHtml = str_replace("%START_TIME%",			wp_kses_post( $value->starttime ),			$eventHtml);
+			$eventHtml = str_replace("%END_TIME%",				wp_kses_post( $value->endtime ),			$eventHtml);
+			$eventHtml = str_replace("%END_DATE%",				wp_kses_post( $value->enddate ),			$eventHtml);
+			$eventHtml = str_replace("%LESS_DESCRIPT%",			wp_kses_post( $lessDescription ),		$eventHtml);
+			$eventHtml = str_replace("%READ_MORE_LINK%",		$lessDescription ? '<a class="read_more_link pointer">Read More</a>' : NULL,		$eventHtml);
 			$eventHtml = str_replace("%DISPLAY_LESS_DESCRIPT%",	$lessDescription ? 'block' : 'none',		$eventHtml);
 			$eventHtml = str_replace("%DISPLAY_MORE_DESCRIPT%",	(!$lessDescription && $value->description) ? 'block' : 'none',		$eventHtml);
-			$eventHtml = str_replace("%MORE_DESCRIPT%",			esc_html( $value->description ),		$eventHtml);
+			$eventHtml = str_replace("%MORE_DESCRIPT%",			wp_kses_post( $value->description ),		$eventHtml);
 			$eventHtml = str_replace("%DETAIL_LINK%",			$detailPageLink,			$eventHtml);
-			$eventHtml = str_replace("%DATESLUG%", esc_html( $value->day . $value->startdayname . $value->startmonthname ),	$eventHtml);
+			$eventHtml = str_replace("%DATESLUG%", wp_kses_post( $value->day . $value->startdayname . $value->startmonthname ),	$eventHtml);
 			$allEvents .= $eventHtml;
 	
 			$calHtml = $calenderHtml;
-			$calHtml = str_replace("%START_DATE_NUMBER%",	esc_html( $value->day ),	$calHtml);
-			$calHtml = str_replace("%START_DATE_DAY%",		esc_html( $value->startdayname ),	$calHtml);
-			$calHtml = str_replace("%START_DATE_MONTH_NAME%", esc_html( $value->startmonthname ),	$calHtml);
-			$calHtml = str_replace("%DATESLUG%", esc_html( $value->day . $value->startdayname . $value->startmonthname ),	$calHtml);
+			$calHtml = str_replace("%START_DATE_NUMBER%",	wp_kses_post( $value->day ),	$calHtml);
+			$calHtml = str_replace("%START_DATE_DAY%",		wp_kses_post( $value->startdayname ),	$calHtml);
+			$calHtml = str_replace("%START_DATE_MONTH_NAME%", wp_kses_post( $value->startmonthname ),	$calHtml);
+			$calHtml = str_replace("%DATESLUG%", wp_kses_post( $value->day . $value->startdayname . $value->startmonthname ),	$calHtml);
 			$calInnerHtml .= $calHtml;
 		}
 	
@@ -99,7 +99,7 @@ class EventsFrontSide {
 			$eventHtml = str_replace("%END_TIME%",				wp_kses_post( $value->endtime ),			$eventHtml);
 			$eventHtml = str_replace("%END_DATE%",				wp_kses_post( $value->enddate ),			$eventHtml);
 			$eventHtml = str_replace("%LESS_DESCRIPT%",			esc_html( $lessDescription ),		$eventHtml);
-			$eventHtml = str_replace("%READ_MORE_LINK%",		$lessDescription ? '<a href="javascript:void(0);" class="read_more_link">Read More</a>' : NULL,		$eventHtml);
+			$eventHtml = str_replace("%READ_MORE_LINK%",		$lessDescription ? '<span class="read_more_link pointer">Read More</span>' : NULL,		$eventHtml);
 			$eventHtml = str_replace("%DISPLAY_LESS_DESCRIPT%",	$lessDescription ? 'block' : 'none',		$eventHtml);
 			$eventHtml = str_replace("%DISPLAY_MORE_DESCRIPT%",	(!$lessDescription && $value->description) ? 'block' : 'none',		$eventHtml);
 			$eventHtml = str_replace("%MORE_DESCRIPT%",			esc_html( $value->description ),		$eventHtml);
@@ -134,7 +134,7 @@ class EventsFrontSide {
 					$eventDetailHtml = str_replace( '%START_TIME%', wp_kses_post( $eventDetail->starttime ), $eventDetailHtml );
 					$eventDetailHtml = str_replace( '%END_TIME%', wp_kses_post( $eventDetail->endtime ), $eventDetailHtml );
 					$eventDetailHtml = str_replace( '%END_DATE%', wp_kses_post( $eventDetail->enddate ), $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%DESCRIPT%', esc_html( $eventDetail->description ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%DESCRIPT%', wp_kses_post( $eventDetail->description ), $eventDetailHtml );
 		
 					echo wp_kses_post( $eventDetailHtml );
 				}
@@ -433,7 +433,7 @@ class EventsFrontSide {
 										</div>
 										<div class="elementor-element elementor-element-96fad1f elementor-widget elementor-widget-theme-post-excerpt" data-id="96fad1f" data-element_type="widget" data-widget_type="theme-post-excerpt.default">
 											<div class="elementor-widget-container read-less" style="display: %DISPLAY_LESS_DESCRIPT%;">%LESS_DESCRIPT% %READ_MORE_LINK%</div>
-											<div class="elementor-widget-container read-more" style="display: %DISPLAY_MORE_DESCRIPT%;">%MORE_DESCRIPT% <a href="javascript:void(0);" class="read_less_link">Read Less</a></div>
+											<div class="elementor-widget-container read-more" style="display: %DISPLAY_MORE_DESCRIPT%;">%MORE_DESCRIPT% <span class="read_less_link pointer">Read Less</span></div>
 										</div>
 									</div>
 								</div>
