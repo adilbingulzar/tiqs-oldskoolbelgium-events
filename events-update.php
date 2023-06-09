@@ -15,7 +15,7 @@ class EventsUpdate {
     public function tiqs_events_update() {
         global $wpdb;
         $table_name = $wpdb->prefix . "tiqs_events";
-        $id = sanitize_text_field( $_GET["id"] );
+        $id = absint( $_GET["id"] );
 
         $vendorId       = isset( $_POST["vendorId"] )         ? sanitize_text_field( $_POST["vendorId"] )         : '';
         $eventname      = isset( $_POST["eventname"] )        ? sanitize_text_field( $_POST["eventname"] )        : '';
