@@ -24,7 +24,7 @@ class EventsFrontSide {
 						</div>';
 		$allEvents = "";
 		$calInnerHtml = "";
-	
+		$this->load_event_css();
 		foreach ($eventsNodes as $key => $value) {
 			$detailPageLink = "#";
 			if($value->type == 'manual') {
@@ -71,11 +71,13 @@ class EventsFrontSide {
 	}
 	 
 	function tiqs_events_firstevent_short_code() {
+		ob_start();
 		$eventsNodes = $this->toed_get_all_events();
 		$value = isset($eventsNodes[0]) ? $eventsNodes[0] : NULL;
 		$eventHtml = '';
 	
 		if ($value) {
+			$this->load_event_css();
 			$detailPageLink = "#";
 			if ($value->type == 'manual') {
 				$detailPageLink = esc_url( site_url('event-detail?event=m-' . $value->id) );
@@ -89,13 +91,13 @@ class EventsFrontSide {
 			$eventHtml = str_replace("%IMAGE_LINK%",			esc_url( $value->image ),				$eventHtml);
 			$eventHtml = str_replace("%BOOK_NOW%",				esc_url( $value->link ),				$eventHtml);
 			$eventHtml = str_replace("%RSVP_LINK%",				esc_url( $value->facebookUrl ),				$eventHtml);
-			$eventHtml = str_replace("%EVENT_NAME%",			esc_html( $value->title ),				$eventHtml);
-			$eventHtml = str_replace("%START_DATE_NUMBER%",		esc_html( $value->day ),				$eventHtml);
-			$eventHtml = str_replace("%START_DATE_DAY%",		esc_html( $value->startdayname ),		$eventHtml);
-			$eventHtml = str_replace("%START_DATE_MONTH_NAME%",	esc_html( $value->startmonthname ),		$eventHtml);
-			$eventHtml = str_replace("%START_TIME%",			esc_html( $value->starttime ),			$eventHtml);
-			$eventHtml = str_replace("%END_TIME%",				esc_html( $value->endtime ),			$eventHtml);
-			$eventHtml = str_replace("%END_DATE%",				esc_html( $value->enddate ),			$eventHtml);
+			$eventHtml = str_replace("%EVENT_NAME%",			wp_kses_post( $value->title ),				$eventHtml);
+			$eventHtml = str_replace("%START_DATE_NUMBER%",		wp_kses_post( $value->day ),				$eventHtml);
+			$eventHtml = str_replace("%START_DATE_DAY%",		wp_kses_post( $value->startdayname ),		$eventHtml);
+			$eventHtml = str_replace("%START_DATE_MONTH_NAME%",	wp_kses_post( $value->startmonthname ),		$eventHtml);
+			$eventHtml = str_replace("%START_TIME%",			wp_kses_post( $value->starttime ),			$eventHtml);
+			$eventHtml = str_replace("%END_TIME%",				wp_kses_post( $value->endtime ),			$eventHtml);
+			$eventHtml = str_replace("%END_DATE%",				wp_kses_post( $value->enddate ),			$eventHtml);
 			$eventHtml = str_replace("%LESS_DESCRIPT%",			esc_html( $lessDescription ),		$eventHtml);
 			$eventHtml = str_replace("%READ_MORE_LINK%",		$lessDescription ? '<a href="javascript:void(0);" class="read_more_link">Read More</a>' : NULL,		$eventHtml);
 			$eventHtml = str_replace("%DISPLAY_LESS_DESCRIPT%",	$lessDescription ? 'block' : 'none',		$eventHtml);
@@ -103,8 +105,9 @@ class EventsFrontSide {
 			$eventHtml = str_replace("%MORE_DESCRIPT%",			esc_html( $value->description ),		$eventHtml);
 			$eventHtml = str_replace("%DETAIL_LINK%",			$detailPageLink,			$eventHtml);
 		}
-	
-		return esc_html($eventHtml);
+		
+		echo wp_kses_post($eventHtml);
+		return ob_get_clean();
 	}
 	
 
@@ -118,19 +121,19 @@ class EventsFrontSide {
 				$eventDetail = $this->toed_get_single_event( $exploded_url[0], $exploded_url[1] );
 		
 				if ( $eventDetail ) {
-					wp_enqueue_style( 'event-detail-css' ); // Enqueue the style sheet
+					$this->load_event_details_css();
 					$eventDetailHtml = $this->get_event_detail_html(); // This function is not defined in the code provided, so you will need to define it
 					
 					$eventDetailHtml = str_replace( '%IMAGE_LINK%', esc_url( $eventDetail->image ), $eventDetailHtml );
 					$eventDetailHtml = str_replace( '%BOOK_NOW%', esc_url( $eventDetail->link ), $eventDetailHtml );
 					$eventDetailHtml = str_replace( '%RSVP_LINK%', esc_url( $eventDetail->facebookUrl ), $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%EVENT_NAME%', esc_html( $eventDetail->title ), $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%START_DATE_NUMBER%', esc_html( $eventDetail->day ), $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%START_DATE_DAY%', esc_html( $eventDetail->startdayname ), $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%START_DATE_MONTH_NAME%', esc_html( $eventDetail->startmonthname ), $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%START_TIME%', esc_html( $eventDetail->starttime ), $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%END_TIME%', esc_html( $eventDetail->endtime ), $eventDetailHtml );
-					$eventDetailHtml = str_replace( '%END_DATE%', esc_html( $eventDetail->enddate ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%EVENT_NAME%', wp_kses_post( $eventDetail->title ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%START_DATE_NUMBER%', wp_kses_post( $eventDetail->day ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%START_DATE_DAY%', wp_kses_post( $eventDetail->startdayname ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%START_DATE_MONTH_NAME%', wp_kses_post( $eventDetail->startmonthname ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%START_TIME%', wp_kses_post( $eventDetail->starttime ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%END_TIME%', wp_kses_post( $eventDetail->endtime ), $eventDetailHtml );
+					$eventDetailHtml = str_replace( '%END_DATE%', wp_kses_post( $eventDetail->enddate ), $eventDetailHtml );
 					$eventDetailHtml = str_replace( '%DESCRIPT%', esc_html( $eventDetail->description ), $eventDetailHtml );
 		
 					echo wp_kses_post( $eventDetailHtml );
@@ -381,9 +384,7 @@ class EventsFrontSide {
 		return '<div id="%DATESLUG%" class="elementor-element elementor-element-2b1e1c1 elementor-grid-1 elementor-grid-tablet-1 elementor-grid-mobile-1 elementor-widget elementor-widget-loop-grid" data-id="2b1e1c1" data-element_type="widget" data-settings="{&quot;template_id&quot;:56,&quot;columns&quot;:1,&quot;columns_tablet&quot;:1,&quot;pagination_type&quot;:&quot;numbers_and_prev_next&quot;,&quot;_skin&quot;:&quot;post&quot;,&quot;columns_mobile&quot;:&quot;1&quot;,&quot;row_gap&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;row_gap_tablet&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;row_gap_mobile&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]}}" data-widget_type="loop-grid.post">
 			<div class="elementor-widget-container">
 				<div class="elementor-loop-container elementor-grid">
-					<style id="loop-56">.elementor-56 .elementor-element.elementor-element-1b2c8ae{--flex-direction:row;--container-widget-width:calc( ( 1 - var( --container-widget-flex-grow ) ) * 100% );--container-widget-height:100%;--container-widget-flex-grow:1;--container-widget-align-self:stretch;--justify-content:space-between;--align-items:center;--background-transition:0.3s;}.elementor-56 .elementor-element.elementor-element-1b2c8ae:not(.elementor-motion-effects-element-type-background), .elementor-56 .elementor-element.elementor-element-1b2c8ae > .elementor-motion-effects-container > .elementor-motion-effects-layer{background-color:var( --e-global-color-e94e8cf );}.elementor-56 .elementor-element.elementor-element-1b2c8ae, .elementor-56 .elementor-element.elementor-element-1b2c8ae::before{--border-transition:0.3s;}.elementor-56 .elementor-element.elementor-element-dc45d04{--flex-direction:column;--container-widget-width:100%;--container-widget-height:initial;--container-widget-flex-grow:0;--container-widget-align-self:initial;--background-transition:0.3s;}.elementor-56 .elementor-element.elementor-element-52d58b3 .elementor-heading-title{color:var( --e-global-color-dd4b0dc );font-family:var( --e-global-typography-secondary-font-family ), Sans-serif;font-weight:var( --e-global-typography-secondary-font-weight );}.elementor-56 .elementor-element.elementor-element-9784b65{--flex-direction:row;--container-widget-width:initial;--container-widget-height:100%;--container-widget-flex-grow:1;--container-widget-align-self:stretch;--justify-content:space-between;--flex-wrap:nowrap;--background-transition:0.3s;--margin-top:0px;--margin-right:0px;--margin-bottom:0px;--margin-left:0px;--padding-top:0px;--padding-right:0px;--padding-bottom:0px;--padding-left:0px;}.elementor-56 .elementor-element.elementor-element-6934619{--flex-direction:row;--container-widget-width:initial;--container-widget-height:100%;--container-widget-flex-grow:1;--container-widget-align-self:stretch;--justify-content:space-between;--flex-wrap:wrap;--background-transition:0.3s;--margin-top:0px;--margin-right:0px;--margin-bottom:0px;--margin-left:0px;--padding-top:0px;--padding-right:0px;--padding-bottom:0px;--padding-left:0px;}.elementor-56 .elementor-element.elementor-element-96fad1f .elementor-widget-container{color:var( --e-global-color-0cbde3f );font-family:var( --e-global-typography-text-font-family ), Sans-serif;font-weight:var( --e-global-typography-text-font-weight );}@media(min-width:768px){.elementor-56 .elementor-element.elementor-element-1b2c8ae{--content-width:100%;}.elementor-56 .elementor-element.elementor-element-9784b65{--content-width:100%;}.elementor-56 .elementor-element.elementor-element-6934619{--content-width:100%;}}@media(max-width:1024px){.elementor-56 .elementor-element.elementor-element-1b2c8ae{--flex-direction:column;--container-widget-width:calc( ( 1 - var( --container-widget-flex-grow ) ) * 100% );--container-widget-height:initial;--container-widget-flex-grow:0;--container-widget-align-self:initial;--align-items:flex-start;}.elementor-56 .elementor-element.elementor-element-9784b65{--flex-direction:row;--container-widget-width:initial;--container-widget-height:100%;--container-widget-flex-grow:1;--container-widget-align-self:stretch;--margin-top:0px;--margin-right:0px;--margin-bottom:0px;--margin-left:0px;--padding-top:0px;--padding-right:0px;--padding-bottom:0px;--padding-left:0px;}.elementor-56 .elementor-element.elementor-element-6934619{--align-items:flex-start;--container-widget-width:calc( ( 1 - var( --container-widget-flex-grow ) ) * 100% );}}@media(max-width:767px){.elementor-56 .elementor-element.elementor-element-9784b65{--flex-direction:column;--container-widget-width:100%;--container-widget-height:initial;--container-widget-flex-grow:0;--container-widget-align-self:initial;}.elementor-56 .elementor-element.elementor-element-6934619{--flex-direction:column;--container-widget-width:100%;--container-widget-height:initial;--container-widget-flex-grow:0;--container-widget-align-self:initial;}}/* Start custom CSS for shortcode, class: .elementor-element-01829f3 */.elementor-56 .elementor-element.elementor-element-01829f3{color:#fff;font-weight:500;}/* End custom CSS */
-						/* Start custom CSS for shortcode, class: .elementor-element-8e709d6 */.elementor-56 .elementor-element.elementor-element-8e709d6{color:#fff;font-weight:500;}/* End custom CSS */
-					</style>
+					
 					<div data-elementor-type="loop-item" data-elementor-id="56" class="elementor elementor-56 e-loop-item-95 e-loop-item">
 						<div class="elementor-element elementor-element-1b2c8ae e-con-boxed e-con" data-id="1b2c8ae" data-element_type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;,&quot;content_width&quot;:&quot;boxed&quot;}">
 							<div class="e-con-inner" style="align-items: start;">
@@ -414,7 +415,7 @@ class EventsFrontSide {
 																		</div>
 																		<div class="extradateinfoblock"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">From %START_TIME% </font></font><br><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">To %END_TIME% %END_DATE%</font></font></div>
 																	</div>
-																	<style>.eventdatetime{display:flex;flex-direction:row;align-items:flex-start;font-family:"vanguard";}.startdateblock{display:flex;flex-direction:row;}.numberOfDay{font-size:3.5rem;margin:0 10px 0 0;padding:0;line-height:1;font-weight:700;}.nameOfDay,.nameOfMonth{font-size:1.1rem;}.extradateinfoblock{margin:0 0 0 20px;font-size:1.1rem;}</style>
+																	
 																</div>
 															</div>
 														</div>
@@ -422,7 +423,7 @@ class EventsFrontSide {
 															<div class="elementor-widget-container">
 																<div class="elementor-shortcode">
 																	<div class="eventbuttonsblock"><a href="%BOOK_NOW%" class="eventbtn" target="_blank" rel="noopener"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">TICKETS</font></font></a><a href="%RSVP_LINK%" class="eventbtn" target="_blank" rel="noopener"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">RSVP</font></font></a></div>
-																	<style>.eventbuttonsblock{display:flex;flex-direction:row;justify-content:space-between;}a.eventbtn{border:2px solid #fff;padding: 8px 20px;margin-right:20px;color:#fff;font-size:1.1rem;font-weight:500;font-family:"vanguard","Roboto Condensed",sans-serif;border-radius:3px;letter-spacing:1px;transition:all .35s ease-in-out;}a.eventbtn:hover, a.eventbtn:focus{background:#92D25B;border-color:#92D25B;}a.eventbtn.large{font-size:1.25rem;border-width:3px;padding:10px 25px;}</style>
+																	
 																</div>
 															</div>
 														</div>
@@ -450,9 +451,7 @@ class EventsFrontSide {
 						<div id="DIV_3">
 							<div id="DIV_4">
 								<div id="DIV_5">
-									<style id="STYLE_6">/*! elementor - v3.9.2 - 21-12-2022 */
-										.elementor-column .elementor-spacer-inner{height:var(--spacer-size)}.e-con{--container-widget-width:100%}.e-con-inner>.elementor-widget-spacer,.e-con>.elementor-widget-spacer{width:var(--container-widget-width,var(--spacer-size));--align-self:var(--container-widget-align-self,initial);--flex-shrink:0}.e-con-inner>.elementor-widget-spacer>.elementor-widget-container,.e-con-inner>.elementor-widget-spacer>.elementor-widget-container>.elementor-spacer,.e-con>.elementor-widget-spacer>.elementor-widget-container,.e-con>.elementor-widget-spacer>.elementor-widget-container>.elementor-spacer{height:100%}.e-con-inner>.elementor-widget-spacer>.elementor-widget-container>.elementor-spacer>.elementor-spacer-inner,.e-con>.elementor-widget-spacer>.elementor-widget-container>.elementor-spacer>.elementor-spacer-inner{height:var(--container-widget-height,var(--spacer-size))}
-									</style>
+									
 									<div id="DIV_7">
 										<div id="DIV_8">
 										</div>
@@ -466,9 +465,7 @@ class EventsFrontSide {
 							<div id="DIV_11">
 								<div id="DIV_12">
 									<div id="DIV_13">
-										<style id="STYLE_14">/*! elementor - v3.9.2 - 21-12-2022 */
-											.elementor-heading-title{padding:0;margin:0;line-height:1}.elementor-widget-heading .elementor-heading-title[class*=elementor-size-]>a{color:inherit;font-size:inherit;line-height:inherit}.elementor-widget-heading .elementor-heading-title.elementor-size-small{font-size:15px}.elementor-widget-heading .elementor-heading-title.elementor-size-medium{font-size:19px}.elementor-widget-heading .elementor-heading-title.elementor-size-large{font-size:29px}.elementor-widget-heading .elementor-heading-title.elementor-size-xl{font-size:39px}.elementor-widget-heading .elementor-heading-title.elementor-size-xxl{font-size:59px}
-										</style>
+										
 										<h1 id="H1_15">
 											%EVENT_NAME%
 										</h1>
@@ -488,8 +485,7 @@ class EventsFrontSide {
 													Vanaf %START_TIME%<br id="BR_27" />Tot %END_TIME% %END_DATE%
 												</div>
 											</div>
-											<style id="STYLE_28">.eventdatetime{display:flex;flex-direction:row;align-items:flex-start;font-family:"vanguard";}.startdateblock{display:flex;flex-direction:row;}.numberOfDay{font-size:3.5rem;margin:0 10px 0 0;padding:0;line-height:1;font-weight:700;}.nameOfDay,.nameOfMonth{font-size:1.1rem;}.extradateinfoblock{margin:0 0 0 20px;font-size:1.1rem;}
-											</style>
+											
 										</div>
 									</div>
 								</div>
@@ -501,8 +497,7 @@ class EventsFrontSide {
 											<div id="DIV_33">
 												<a id="A_34" href="%BOOK_NOW%">TICKETS</a><a href="%RSVP_LINK%" id="A_35">RSVP</a>
 											</div>
-											<style id="STYLE_36">.eventbuttonsblock{display:flex;flex-direction:row;justify-content:space-between;}a.eventbtn{border:2px solid #fff;padding: 8px 20px;margin-right:20px;color:#fff;font-size:1.1rem;font-weight:500;font-family:"vanguard","Roboto Condensed",sans-serif;border-radius:3px;letter-spacing:1px;transition:all .35s ease-in-out;}a.eventbtn:hover, a.eventbtn:focus{background:#92D25B;border-color:#92D25B;}a.eventbtn.large{font-size:1.25rem;border-width:3px;padding:10px 25px;}
-											</style>
+											
 										</div>
 									</div>
 								</div>
@@ -548,9 +543,14 @@ class EventsFrontSide {
 		return $url;
 	}
 
-	function load_detail_css() {
-		wp_register_style( 'tiqs-events-1', $this->get_file_url('includes/css/event-details.css') ); 
+	function load_event_details_css() {
+		wp_register_style( 'tiqs-events-1', $this->get_file_url('assets/css/event-details.css') ); 
 		wp_enqueue_style( 'tiqs-events-1' );
+	}
+
+	function load_event_css() {
+		wp_register_style( 'tiqs-events-2', $this->get_file_url('assets/css/events.css') ); 
+		wp_enqueue_style( 'tiqs-events-2' );
 	}
 
 	public static function tiqs_events_header() {
@@ -660,14 +660,23 @@ class EventsFrontSide {
 
 	function get_less_description($description) {
 		$description = trim($description);
-
-		if($description && strlen($description) > 100) {
+	
+		if ($description && strlen($description) > 100) {
+			libxml_use_internal_errors(true); // Enable error handling for the DOMDocument
 			$dom = new \DOMDocument;
-			$dom->loadHTML($description);
-			$elements = $dom->getElementsByTagName('body')->item(0)->childNodes;
-			$text = $elements->item(0)->nodeValue;
-			return substr($text, 0, 100) . '... ';
+			$dom->loadHTML('<?xml encoding="UTF-8">' . $description, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD); // Add XML declaration to handle special characters
+			
+			$body = $dom->getElementsByTagName('body')->item(0);
+			if ($body) {
+				$elements = $body->childNodes;
+				if ($elements->length > 0) {
+					$text = $elements->item(0)->nodeValue;
+					return substr($text, 0, 100) . '...';
+				}
+			}
 		}
+	
 		return false;
 	}
+	
 }

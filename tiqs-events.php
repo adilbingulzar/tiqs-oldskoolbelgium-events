@@ -98,8 +98,7 @@ class EventsPlugin {
             'tiqs_events_list', // Menu slug
             function () {
                 $events_list = new \Tiqs_OldSkoolBelgium_Events\EventsList();
-                $events_list->tiqs_events_list();gs', 'tiqs_events_info');
-                register_setting('tiqs-events-info-settings
+                $events_list->tiqs_events_list();
             } // Updated callback
         );
 
@@ -156,19 +155,19 @@ class EventsPlugin {
     public function tiqs_events_info_short_code($atts) {
         // Shortcode logic here
         $events_front_side = new \Tiqs_OldSkoolBelgium_Events\EventsFrontSide();
-        $events_front_side->tiqs_events_info_short_code();
+        return $events_front_side->tiqs_events_info_short_code();
     }
 
     public function tiqs_events_firstevent_short_code($atts) {
         // Shortcode logic here
         $events_front_side = new \Tiqs_OldSkoolBelgium_Events\EventsFrontSide();
-        $events_front_side->tiqs_events_firstevent_short_code();
+        return $events_front_side->tiqs_events_firstevent_short_code();
     }
 
     public function tiqs_event_detail_info_short_code($atts) {
         // Shortcode logic here
         $events_front_side = new \Tiqs_OldSkoolBelgium_Events\EventsFrontSide();
-        $events_front_side->tiqs_event_detail_info_short_code();
+        return $events_front_side->tiqs_event_detail_info_short_code();
     }
 
     public function add_custom_query_var($query_vars) {
