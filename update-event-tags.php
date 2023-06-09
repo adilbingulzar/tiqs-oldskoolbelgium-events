@@ -7,7 +7,7 @@ class UpdateEventTags {
         // Constructor logic
     }
 
-    function TOED_Update_status_db_callback() {
+    function toed_update_status_db_callback() {
         global $wpdb;
 
         $type = sanitize_text_field($_POST['type']);

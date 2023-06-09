@@ -34,7 +34,7 @@ class EventsPlugin {
         add_filter('query_vars', array($this, 'add_custom_query_var'));
 
         // Register AJAX action
-        add_action('wp_ajax_update_status_db', array('\Tiqs_OldSkoolBelgium_Events\UpdateEventTags', 'TOED_Update_status_db_callback'));
+        add_action('wp_ajax_update_status_db', array('\Tiqs_OldSkoolBelgium_Events\UpdateEventTags', 'toed_update_status_db_callback'));
 
         if (!defined('TOED_EVENTROOTDIR')) {
             define('TOED_EVENTROOTDIR', plugin_dir_path(__FILE__));
@@ -98,7 +98,8 @@ class EventsPlugin {
             'tiqs_events_list', // Menu slug
             function () {
                 $events_list = new \Tiqs_OldSkoolBelgium_Events\EventsList();
-                $events_list->tiqs_events_list();
+                $events_list->tiqs_events_list();gs', 'tiqs_events_info');
+                register_setting('tiqs-events-info-settings
             } // Updated callback
         );
 
@@ -141,7 +142,7 @@ class EventsPlugin {
             } // Updated callback
         );
     }
-
+       
     public function update_tiqs_events_info() {
         register_setting('tiqs-events-info-settings', 'tiqs_events_info');
         register_setting('tiqs-events-info-settings', 'tiqs_events_affiliate');

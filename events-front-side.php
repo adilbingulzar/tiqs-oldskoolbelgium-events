@@ -5,7 +5,10 @@ namespace Tiqs_OldSkoolBelgium_Events;
 class EventsFrontSide {
   
 	function tiqs_events_info_short_code() {
-		$eventsNodes = $this->TOED_GetAllEvents();
+		
+		ob_start();
+
+		$eventsNodes = $this->toed_get_all_events();
 		$calenderHtml = '<div class="dates-boxes" data-slug="%DATESLUG%">
 							<div class="date fw-bold font-vanguard lh-1">
 								%START_DATE_NUMBER%
@@ -30,9 +33,9 @@ class EventsFrontSide {
 				$detailPageLink = esc_url( site_url('event-detail?event=a-' . $value->event_id) );
 			}
 	
-			$lessDescription = $this->getLessDescription($value->description);
+			$lessDescription = $this->get_less_description($value->description);
 	
-			$eventHtml = $this->TOED_GetEventHtml();
+			$eventHtml = $this->toed_get_event_html();
 			$eventHtml = str_replace("%IMAGE_LINK%",			esc_url( $value->image ),				$eventHtml);
 			$eventHtml = str_replace("%BOOK_NOW%",				esc_url( $value->link ),				$eventHtml);
 			$eventHtml = str_replace("%RSVP_LINK%",				esc_url( $value->facebookUrl ),				$eventHtml);
@@ -62,11 +65,13 @@ class EventsFrontSide {
 	
 		$calenderHtml = '<div class="dates-boxes-wrapper">' . $calInnerHtml . '</div>';
 	
-		return esc_html($calenderHtml . $allEvents);
+		echo wp_kses_post($calenderHtml . $allEvents);
+
+		return ob_get_clean();
 	}
 	 
 	function tiqs_events_firstevent_short_code() {
-		$eventsNodes = $this->TOED_GetAllEvents();
+		$eventsNodes = $this->toed_get_all_events();
 		$value = isset($eventsNodes[0]) ? $eventsNodes[0] : NULL;
 		$eventHtml = '';
 	
@@ -78,7 +83,7 @@ class EventsFrontSide {
 				$detailPageLink = esc_url( site_url('event-detail?event=a-' . $value->event_id) );
 			}
 	
-			$lessDescription = $this->getLessDescription($value->description);
+			$lessDescription = $this->get_less_description($value->description);
 	
 			$eventHtml = $this->TOED_GetEventHtml();
 			$eventHtml = str_replace("%IMAGE_LINK%",			esc_url( $value->image ),				$eventHtml);
@@ -110,11 +115,11 @@ class EventsFrontSide {
 			$exploded_url = explode( '-', sanitize_text_field( wp_unslash( $_GET['event'] ) ) );
 		
 			if ( isset( $exploded_url[0] ) && isset( $exploded_url[1] ) && ( $exploded_url[0] == 'm' || $exploded_url[0] == 'a' ) ) {
-				$eventDetail = $this->TOED_GetSingleEvent( $exploded_url[0], $exploded_url[1] );
+				$eventDetail = $this->toed_get_single_event( $exploded_url[0], $exploded_url[1] );
 		
 				if ( $eventDetail ) {
 					wp_enqueue_style( 'event-detail-css' ); // Enqueue the style sheet
-					$eventDetailHtml = $this->getEventDetailHtml(); // This function is not defined in the code provided, so you will need to define it
+					$eventDetailHtml = $this->get_event_detail_html(); // This function is not defined in the code provided, so you will need to define it
 					
 					$eventDetailHtml = str_replace( '%IMAGE_LINK%', esc_url( $eventDetail->image ), $eventDetailHtml );
 					$eventDetailHtml = str_replace( '%BOOK_NOW%', esc_url( $eventDetail->link ), $eventDetailHtml );
@@ -128,7 +133,7 @@ class EventsFrontSide {
 					$eventDetailHtml = str_replace( '%END_DATE%', esc_html( $eventDetail->enddate ), $eventDetailHtml );
 					$eventDetailHtml = str_replace( '%DESCRIPT%', esc_html( $eventDetail->description ), $eventDetailHtml );
 		
-					echo esc_html( $eventDetailHtml );
+					echo wp_kses_post( $eventDetailHtml );
 				}
 			}
 		}
@@ -136,7 +141,7 @@ class EventsFrontSide {
 		
 	}
 
-	function TOED_GetAllEvents() {
+	function toed_get_all_events() {
 		global $wpdb;
 		$table_name = $wpdb->prefix . "tiqs_events";
 
@@ -232,7 +237,7 @@ class EventsFrontSide {
 				$tag = isset($isDataExist[array_key_first($isDataExist)]->tag) ? $isDataExist[array_key_first($isDataExist)]->tag : '';
 
 
-				$link = $value->redirectShopUrl && $this->checkShopStatus($value->id) ? $value->redirectShopUrl : ('http://tiqs.com/alfred/events/shop/' . $value->id);
+				$link = $value->redirectShopUrl && $this->check_shop_status($value->id) ? $value->redirectShopUrl : ('http://tiqs.com/alfred/events/shop/' . $value->id);
 
 				if($tag) {
 					$link .= '?tag=' . $tag;
@@ -262,7 +267,7 @@ class EventsFrontSide {
 		return $allEvents;
 	}
 
-	function TOED_GetSingleEvent($type , $id) {
+	function toed_get_single_event($type , $id) {
 		$obj = new \stdClass();
 		global $wpdb;
 		$table_name = $wpdb->prefix . "tiqs_events";
@@ -350,7 +355,7 @@ class EventsFrontSide {
 
 				$tag = isset($isDataExist[array_key_first($isDataExist)]->tag) ? $isDataExist[array_key_first($isDataExist)]->tag : '';
 
-				$link = $value->redirectShopUrl && $this->checkShopStatus($value->id) ? $value->redirectShopUrl : ('http://tiqs.com/alfred/events/shop/' . $value->id);
+				$link = $value->redirectShopUrl && $this->check_shop_status($value->id) ? $value->redirectShopUrl : ('http://tiqs.com/alfred/events/shop/' . $value->id);
 
 				if($tag) {
 					$link .= '?tag=' . $tag;
@@ -372,7 +377,7 @@ class EventsFrontSide {
 		return $obj;
 	}
 
-	function TOED_GetEventHtml() {
+	function toed_get_event_html() {
 		return '<div id="%DATESLUG%" class="elementor-element elementor-element-2b1e1c1 elementor-grid-1 elementor-grid-tablet-1 elementor-grid-mobile-1 elementor-widget elementor-widget-loop-grid" data-id="2b1e1c1" data-element_type="widget" data-settings="{&quot;template_id&quot;:56,&quot;columns&quot;:1,&quot;columns_tablet&quot;:1,&quot;pagination_type&quot;:&quot;numbers_and_prev_next&quot;,&quot;_skin&quot;:&quot;post&quot;,&quot;columns_mobile&quot;:&quot;1&quot;,&quot;row_gap&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;row_gap_tablet&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]},&quot;row_gap_mobile&quot;:{&quot;unit&quot;:&quot;px&quot;,&quot;size&quot;:&quot;&quot;,&quot;sizes&quot;:[]}}" data-widget_type="loop-grid.post">
 			<div class="elementor-widget-container">
 				<div class="elementor-loop-container elementor-grid">
@@ -439,7 +444,7 @@ class EventsFrontSide {
 		</div>';
 	}
 
-	function getEventDetailHtml() {
+	function get_event_detail_html() {
 		return '<div id="DIV_1">
 					<div id="DIV_2" style="background: rgba(0, 0, 0, 0) url(%IMAGE_LINK%) no-repeat scroll 50% 50% / cover padding-box border-box;">
 						<div id="DIV_3">
@@ -637,7 +642,7 @@ class EventsFrontSide {
 		
 	}
 
-	function checkShopStatus($eventId) {
+	function check_shop_status($eventId) {
 		$body = array('eventId' => $eventId);
 		$data = array(
 			'body'	=> $body
@@ -653,7 +658,7 @@ class EventsFrontSide {
 		return false;
 	}
 
-	function getLessDescription($description) {
+	function get_less_description($description) {
 		$description = trim($description);
 
 		if($description && strlen($description) > 100) {

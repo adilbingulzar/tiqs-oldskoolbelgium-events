@@ -8,7 +8,7 @@ class EventsList {
     }
 
     public function tiqs_events_list() {
-        wp_enqueue_script( 'tiqs-events-script-8', $this->TOED_Get_page_url('includes/js/custom.js'), array( 'jquery' ), null, true );
+        wp_enqueue_script( 'tiqs-events-script-8', $this->toed_get_page_url('includes/js/custom.js'), array( 'jquery' ), null, true );
         wp_localize_script( 'tiqs-events-script-8', 'data', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
         wp_enqueue_style( 'tiqs-events-admin', plugin_dir_url( __FILE__ ) . 'style-admin.css' );
 
@@ -65,7 +65,7 @@ class EventsList {
         <?php
     }
     
-    public function TOED_Get_page_url( $path = '' ) {
+    public function toed_get_page_url( $path = '' ) {
         $url = plugins_url( $path , __FILE__);
 
         if ( is_ssl() && 'http:' === substr( $url, 0, 5 ) ) {
