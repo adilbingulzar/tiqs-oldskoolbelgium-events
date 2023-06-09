@@ -115,7 +115,7 @@ class EventsUpdate {
                 <a href="<?php echo admin_url( 'admin.php?page=tiqs_events_list' ) ?>">&laquo; Back to events list</a>
 
             <?php } else { ?>
-                <form method="post" enctype="multipart/form-data" action="<?php echo wp_kses_post( $_SERVER['REQUEST_URI'] ); ?>">
+                <form method="post" enctype="multipart/form-data" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
                     <table class='wp-list-table widefat fixed'>
                         <tr>
                             <th class="ss-th-width">Vendor Id</th>
