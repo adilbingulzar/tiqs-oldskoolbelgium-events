@@ -45,12 +45,12 @@ class EventsPlugin {
     }
 
     public function include_files() {
-        require_once(TOED_EVENTROOTDIR . 'events-list.php');
-        require_once(TOED_EVENTROOTDIR . 'events-create.php');
-        require_once(TOED_EVENTROOTDIR . 'events-update.php');
-        require_once(TOED_EVENTROOTDIR . 'events-block.php');
-        require_once(TOED_EVENTROOTDIR . 'events-front-side.php');
-        require_once(TOED_EVENTROOTDIR . 'update-event-tags.php');
+        require_once TOED_EVENTROOTDIR . 'events-list.php';
+        require_once TOED_EVENTROOTDIR . 'events-create.php';
+        require_once TOED_EVENTROOTDIR . 'events-update.php';
+        require_once TOED_EVENTROOTDIR . 'events-block.php';
+        require_once TOED_EVENTROOTDIR . 'events-front-side.php';
+        require_once TOED_EVENTROOTDIR . 'update-event-tags.php';
     }
 
     public function ss_options_install() {
@@ -85,7 +85,7 @@ class EventsPlugin {
             PRIMARY KEY (`id`)
         ) $charset_collate; ";
 
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta($sql);
     }
 
