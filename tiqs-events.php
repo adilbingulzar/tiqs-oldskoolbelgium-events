@@ -20,7 +20,7 @@ class EventsPlugin {
         add_action('admin_init', array($this, 'update_tiqs_events_info'));
 
         // Add plugin logic for extra info in posts
-        add_filter('the_content', array($this, 'tiqs_events_info'));
+        // add_filter('the_content', array($this, 'tiqs_events_info'));
 
         // Add plugin hooks and shortcodes
         add_action('wp_head', array('\Tiqs_OldSkoolBelgium_Events\EventsFrontSide', 'tiqs_events_header'));
