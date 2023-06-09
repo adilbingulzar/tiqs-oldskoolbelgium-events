@@ -115,16 +115,16 @@ class EventsUpdate {
                 <a href="<?php echo admin_url( 'admin.php?page=tiqs_events_list' ) ?>">&laquo; Back to events list</a>
 
             <?php } else { ?>
-                <form method="post" enctype="multipart/form-data" action="<?php echo esc_html( $_SERVER['REQUEST_URI'] ); ?>">
+                <form method="post" enctype="multipart/form-data" action="<?php echo wp_kses_post( $_SERVER['REQUEST_URI'] ); ?>">
                     <table class='wp-list-table widefat fixed'>
                         <tr>
                             <th class="ss-th-width">Vendor Id</th>
                             <td>
-                                <input type="text" name="vendorId" value="<?php echo esc_html( $vendorId ); ?>" class="ss-field-width" placeholder="Vendor Id" required />
+                                <input type="text" name="vendorId" value="<?php echo wp_kses_post( $vendorId ); ?>" class="ss-field-width" placeholder="Vendor Id" required />
                             </td>
                             <th class="ss-th-width">Event Name</th>
                             <td>
-                                <input type="text" name="eventname" value="<?php echo esc_html( $eventname ); ?>" class="ss-field-width" placeholder="Event Name" required />
+                                <input type="text" name="eventname" value="<?php echo wp_kses_post( $eventname ); ?>" class="ss-field-width" placeholder="Event Name" required />
                             </td>
                         </tr>
                         <tr>
@@ -135,7 +135,7 @@ class EventsUpdate {
 
                             <th class="ss-th-width">Event Category</th>
                             <td>
-                                <input type="text" name="eventCategory" value="<?php echo esc_html( $eventCategory ); ?>" class="ss-field-width" placeholder="Category" required />
+                                <input type="text" name="eventCategory" value="<?php echo wp_kses_post( $eventCategory ); ?>" class="ss-field-width" placeholder="Category" required />
                             </td>
                         </tr>
                         <tr>
@@ -174,9 +174,9 @@ class EventsUpdate {
 
                         <tr>
                             <th class="ss-th-width">URL</th>
-                            <td><input type="url" name="url" value="<?php echo esc_html( $url ); ?>" class="ss-field-width" placeholder="URL" required /></td>
+                            <td><input type="url" name="url" value="<?php echo esc_url( $url ); ?>" class="ss-field-width" placeholder="URL" required /></td>
                             <th class="ss-th-width">Facebook URL</th>
-                            <td><input type="url" name="facebookUrl" value="<?php echo esc_html( $facebookUrl ); ?>" class="ss-field-width" placeholder="Facebook URL" required /></td>
+                            <td><input type="url" name="facebookUrl" value="<?php echo esc_url( $facebookUrl ); ?>" class="ss-field-width" placeholder="Facebook URL" required /></td>
                         </tr>
                     </table>
 
