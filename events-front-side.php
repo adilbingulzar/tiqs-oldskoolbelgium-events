@@ -98,11 +98,11 @@ class EventsFrontSide {
 			$eventHtml = str_replace("%START_TIME%",			wp_kses_post( $value->starttime ),			$eventHtml);
 			$eventHtml = str_replace("%END_TIME%",				wp_kses_post( $value->endtime ),			$eventHtml);
 			$eventHtml = str_replace("%END_DATE%",				wp_kses_post( $value->enddate ),			$eventHtml);
-			$eventHtml = str_replace("%LESS_DESCRIPT%",			esc_html( $lessDescription ),		$eventHtml);
+			$eventHtml = str_replace("%LESS_DESCRIPT%",			wp_kses_post( $lessDescription ),		$eventHtml);
 			$eventHtml = str_replace("%READ_MORE_LINK%",		$lessDescription ? '<span class="read_more_link pointer">Read More</span>' : NULL,		$eventHtml);
 			$eventHtml = str_replace("%DISPLAY_LESS_DESCRIPT%",	$lessDescription ? 'block' : 'none',		$eventHtml);
 			$eventHtml = str_replace("%DISPLAY_MORE_DESCRIPT%",	(!$lessDescription && $value->description) ? 'block' : 'none',		$eventHtml);
-			$eventHtml = str_replace("%MORE_DESCRIPT%",			esc_html( $value->description ),		$eventHtml);
+			$eventHtml = str_replace("%MORE_DESCRIPT%",			wp_kses_post( $value->description ),		$eventHtml);
 			$eventHtml = str_replace("%DETAIL_LINK%",			$detailPageLink,			$eventHtml);
 		}
 		
